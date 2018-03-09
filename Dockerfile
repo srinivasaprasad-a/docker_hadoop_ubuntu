@@ -3,6 +3,7 @@ MAINTAINER SrinivasaPrasadA
 
 USER root
 
+# Install default JDK of the OS and SSH
 RUN apt-get update && \
     apt-get install -y default-jdk && \
     apt-get install -y ssh
