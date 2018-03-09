@@ -1,0 +1,22 @@
+# Created by .ignore support plugin (hsz.mobi)
+# JetBrains
+*.iml
+.idea/
+
+# Python modules, setuptools distribution folder, egg metadata.
+*.pyc
+/dist/
+/build/
+*.egg-info
+.eggs/
+.cache/
+
+# Maven
+*target/
+
+# Configuration
+*.ini
+
+# Output files
+*.tsv
+*.csv
