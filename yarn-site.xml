@@ -3,14 +3,4 @@
         <name>yarn.nodemanager.aux-services</name>
         <value>mapreduce_shuffle</value>
     </property>
-
-    <property>
-      <name>yarn.application.classpath</name>
-      <value>/programs/hadoop/etc/hadoop, /programs/hadoop/share/hadoop/common/*, /programs/hadoop/share/hadoop/common/lib/*, /programs/hadoop/share/hadoop/hdfs/*, /programs/hadoop/share/hadoop/hdfs/lib/*, /programs/hadoop/share/hadoop/mapreduce/*, /programs/hadoop/share/hadoop/mapreduce/lib/*, /programs/hadoop/share/hadoop/yarn/*, /programs/hadoop/share/hadoop/yarn/lib/*</value>
-    </property>
-
-    <property>
-		<name>yarn.nodemanager.delete.debug-delay-sec</name>
-		<value>600</value>
-  </property>
 </configuration>
