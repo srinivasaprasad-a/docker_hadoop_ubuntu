@@ -4,8 +4,7 @@ MAINTAINER SrinivasaPrasadA
 USER root
 
 RUN apt-get update && \
-    apt-get install -y default-jdk && \
-    apt-get install -y ssh
+    apt-get install -y openjdk-8-jdk ssh curl
 
 # Setup passwordless ssh
 RUN rm -f /etc/ssh/ssh_host_dsa_key /etc/ssh/ssh_host_rsa_key /root/.ssh/id_rsa && \
@@ -17,16 +16,18 @@ RUN rm -f /etc/ssh/ssh_host_dsa_key /etc/ssh/ssh_host_rsa_key /root/.ssh/id_rsa 
 WORKDIR /programs/
 RUN pwd
 
-ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64 \
-    PATH $PATH:$JAVA_HOME
+ENV HADOOP_VERSION 2.9.0
 
-RUN wget http://www-us.apache.org/dist/hadoop/common/hadoop-2.9.0/hadoop-2.9.0.tar.gz -P /programs/ && \
-    gunzip /programs/hadoop-2.9.0.tar.gz && \
-    tar xf /programs/hadoop-2.9.0.tar && \
-    mv /programs/hadoop-2.9.0 /programs/hadoop && \
-    rm /programs/hadoop-2.9.0.tar
+RUN curl -fSL https://www.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz -o /programs/hadoop-$HADOOP_VERSION.tar.gz && \
+    gunzip /programs/hadoop-$HADOOP_VERSION.tar.gz && \
+    tar xf /programs/hadoop-$HADOOP_VERSION.tar && \
+    mv /programs/hadoop-$HADOOP_VERSION /programs/hadoop && \
+    rm /programs/hadoop-$HADOOP_VERSION.tar
 
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+ENV PATH $PATH:$JAVA_HOME
 ENV HADOOP_PREFIX /programs/hadoop
+ENV PATH $PATH:$HADOOP_PREFIX/bin
 
 RUN sed -i '/^export JAVA_HOME/ s:.*:export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64\nexport HADOOP_PREFIX=/programs/hadoop\nexport HADOOP_HOME=/programs/hadoop\n:' $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh && \
     sed -i '/^export HADOOP_CONF_DIR/ s:.*:export HADOOP_CONF_DIR=/programs/hadoop/etc/hadoop/:' $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh
@@ -51,12 +52,10 @@ RUN sed  -i "/^[^#]*UsePAM/ s/.*/#&/"  /etc/ssh/sshd_config && \
 
 RUN chmod +x $HADOOP_PREFIX/etc/hadoop/*-env.sh
 
-ADD bootstrap.sh /etc/bootstrap.sh
-RUN chown root:root /etc/bootstrap.sh && \
-    chmod 700 /etc/bootstrap.sh
+ADD start_up.sh /etc/start_up.sh
+RUN chown root:root /etc/start_up.sh && \
+    chmod 700 /etc/start_up.sh
 
-ENV BOOTSTRAP /etc/bootstrap.sh
-
-CMD ["/etc/bootstrap.sh", "-d"]
+CMD ["/etc/start_up.sh", "-d"]
 
 EXPOSE 50020 50090 50070 50010 50075 8031 8032 8033 8040 8042 49707 22 8088 8030
