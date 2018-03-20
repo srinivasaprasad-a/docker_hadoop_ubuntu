@@ -1,5 +1,9 @@
-Host *
-  UserKnownHostsFile /dev/null
+Host localhost
   StrictHostKeyChecking no
-  LogLevel quiet
-  Port 2122
+
+Host 0.0.0.0
+  StrictHostKeyChecking no
+  
+Host hadoop-*
+   StrictHostKeyChecking no
+   UserKnownHostsFile=/dev/null
